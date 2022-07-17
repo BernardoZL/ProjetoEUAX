@@ -1,0 +1,16 @@
+<div class="mt-2">
+    <form [formGroup]="loginForm">
+        <div class="mb-3">
+          <label for="nome" class="form-label">Nome</label>
+          <input type="text" class="form-control" id="nome" formControlName="nome">
+        </div>
+        <div class="mb-3">
+          <label for="senha" class="form-label">Senha</label>
+          <input type="password" class="form-control" id="senha" formControlName="senha">
+        </div>
+        <button *ngIf="!isLogged" (click)="logar()" class="btn btn-primary">Logar</button>
+        <button *ngIf="isLogged" (click)="logout()" class="btn btn-danger">Log Out</button>
+      </form>
+      <p *ngIf="mensagem" ngClass="{classeMensagem}">{{mensagem}}</p>
+</div>
+

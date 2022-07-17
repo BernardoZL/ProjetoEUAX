@@ -1,0 +1,28 @@
+
+<nav class="navbar navbar-expand-lg bg-primary navbar-dark">
+<div class="container-fluid">
+    <a class="navbar-brand" routerLink="loja" routerLinkActive="active">
+    <img src="../../assets/loja.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                    Loja
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav" style="justify-content: flex-end;">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="!getIsLogged()">
+        <a class="nav-link active" routerLink="carrinho" routerLinkActive="active">
+            <img src="../../assets/carrinho.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                    Carrinho
+        </a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link active" routerLink="login" routerLinkActive="active">
+            <img src="../../assets/login.png" alt="" width="30" height="24" class="d-inline-block align-text-top">
+                    Login
+        </a>
+        </li>
+    </ul>
+    </div>
+</div>
+</nav>

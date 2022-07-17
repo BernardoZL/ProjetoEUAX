@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="mt-2 mb-2" *ngIf="produtos.length > 0">
+        <button (click)="limparCarrinho()" class="btn btn-outline-danger">Limpar Carrinho</button>
+    </div>
+    <div class="col-sm-3 mt-2" *ngFor="let produto of produtos">
+        <div class="card">
+            <img src={{produto?.imagem}} class="card-img-top" alt="{{produto?.nome}}">
+            <div class="card-body">
+              <h5 class="card-title">{{produto?.nome}}</h5>
+              <p class="card-text">Preço: R$ {{produto?.preco}}</p>
+            </div>
+        </div>
+    </div>
+  </div>

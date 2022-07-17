@@ -1,0 +1,15 @@
+<p>{{categoria?.nome}}</p>
+
+
+<div class="row">
+    <div class="col-sm-3 mt-2" *ngFor="let produto of produtos">
+        <div class="card">
+            <img src={{produto?.imagem}} class="card-img-top" alt="{{produto?.nome}}">
+            <div class="card-body">
+              <h5 class="card-title">{{produto?.nome}}</h5>
+              <p class="card-text">Preço: R$ {{produto?.preco}}</p>
+              <button (click)="salvarNoCarrinho(produto.id)" class="btn btn-primary">Adicionar no carrinho</button>
+            </div>
+        </div>
+    </div>
+  </div>

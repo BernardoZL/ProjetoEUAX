@@ -1,0 +1,19 @@
+<div class="row" style="margin-top: 20px;">
+    <div class="col-sm-3">
+        <p class="bg-primary fs-1 text-center" style="color: white">Categorias</p>
+        <ul class="list-group">
+            <li (click)="setSelecao(categoria)" *ngFor="let categoria of categorias" style="cursor: pointer;"
+             [ngClass]="{'list-group-item active': categoriaSelecionada?.nome == categoria.nome,
+                        'list-group-item': true}">
+             {{categoria.nome}}</li>
+        </ul>
+    </div>
+    <div *ngIf="categoriaSelecionada && !getIsLogged()" class="col-sm-9">
+        <p class="bg-primary fs-1 text-center" style="color: white">Produtos</p>
+        <app-produtos-cliente [categoria]="categoriaSelecionada"></app-produtos-cliente>
+    </div>
+    <div *ngIf="categoriaSelecionada && getIsLogged()" class="col-sm-9">
+        <p class="bg-primary fs-1 text-center" style="color: white">Produtos</p>
+        <app-produtos-admin [categoria]="categoriaSelecionada"></app-produtos-admin>
+    </div>
+</div>
