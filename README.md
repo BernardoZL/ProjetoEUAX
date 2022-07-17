@@ -9,3 +9,5 @@ Explicar eCommerce
 https://nodejs.org/en/
 
 Next -> (Aceitar os termos) Next -> Next -> Next -> Next -> Install -> Finish
+
+bootstrap ngx-bootstrap
