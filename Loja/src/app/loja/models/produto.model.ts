@@ -3,4 +3,5 @@ export interface Produto{
     nome: String;
     preco: String;
     imagem: String;
+    idCategoria: number;
 }
