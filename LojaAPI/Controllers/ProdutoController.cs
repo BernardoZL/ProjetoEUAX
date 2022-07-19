@@ -41,6 +41,20 @@ public class ProdutoController : ControllerBase
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        try
+        {
+            var result = await _repo.GetAllProdutoAsync();
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> Post(Produto produto)
     {

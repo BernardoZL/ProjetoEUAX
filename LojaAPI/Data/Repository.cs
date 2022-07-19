@@ -40,6 +40,16 @@ namespace LojaAPI.Data
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Produto[]> GetAllProdutoAsync()
+        {
+            IQueryable<Produto> query = _context.Produto;
+
+            query = query.AsNoTracking()
+                         .OrderBy(produto => produto.id);
+
+            return await query.ToArrayAsync();
+        }
         public async Task<Produto[]> GetProdutosAsyncByCategoriaId(int idCategoria)
         {
             IQueryable<Produto> query = _context.Produto;

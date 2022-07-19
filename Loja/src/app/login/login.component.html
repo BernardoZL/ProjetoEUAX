@@ -11,6 +11,6 @@
         <button *ngIf="!isLogged" (click)="logar()" class="btn btn-primary">Logar</button>
         <button *ngIf="isLogged" (click)="logout()" class="btn btn-danger">Log Out</button>
       </form>
-      <p *ngIf="mensagem" ngClass="{classeMensagem}">{{mensagem}}</p>
+      <p *ngIf="mensagem" class="bg-danger mt-3">{{mensagem}}</p>
 </div>
 

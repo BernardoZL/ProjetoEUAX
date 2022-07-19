@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { LoginService } from './login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,12 +11,17 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
 
   public mensagem? : String;
-  public classeMensagem : String = "bg-danger";
   public isLogged : boolean = false;
 
   public loginForm! : FormGroup;
 
-  constructor(private fb: FormBuilder) { 
+  constructor
+  (
+    private fb: FormBuilder,
+    private loginService: LoginService,
+    private router: Router
+  )
+  { 
     this.inicializarForm()
   }
 
@@ -23,9 +30,20 @@ export class LoginComponent implements OnInit {
   }
 
   public logar(){
-    console.log(this.loginForm.value)
-    sessionStorage.setItem("login", "1")
-    this.isLogged = true;
+    if(!this.loginForm.valid){return};
+
+    this.loginService.validarAdmin(this.loginForm.value).subscribe({
+      next: (retorno) => {
+        if(retorno){
+          sessionStorage.setItem("login", "1");
+          this.isLogged = true;
+          this.router.navigate(['']);
+        }else{
+          this.mensagem = "Login e Senha incorretas";
+        }
+      },
+      error: (erro) => this.mensagem = "Erro ao logar"
+    }).add(() => {})
   }
 
   public getIsLogged(){

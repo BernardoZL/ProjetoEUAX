@@ -40,10 +40,17 @@
                   <label for="preco" class="form-label">Preço</label>
                   <input type="text" class="form-control"  formControlName="preco">
                 </div>
+                <div class="mb-3">
+                  <label for="imagem" class="form-label">Imagem</label>
+                  <input type="file" class="form-control" (change)="onChange($event)">
+                </div>
+                <div *ngIf="myimage" class="mb-3">
+                  <img [src]="myimage" width="200px" height="200px" alt="" />
+                </div>
 
-                <button *ngIf="estaCadastrando" class="btn btn-primary">Cadastrar</button>
-                <button *ngIf="!estaCadastrando" class="btn btn-primary">Atualizar</button>
-                <button *ngIf="!estaCadastrando" class="btn btn-danger">Excluir</button>
+                <button (click)="cadastrar()" *ngIf="estaCadastrando" class="btn btn-primary">Cadastrar</button>
+                <button (click)="atualizar()" *ngIf="!estaCadastrando" class="btn btn-primary">Atualizar</button>
+                <button (click)="excluir()" *ngIf="!estaCadastrando" class="btn btn-danger">Excluir</button>
             </form>
         </div>
     </div>
