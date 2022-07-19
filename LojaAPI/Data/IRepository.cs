@@ -14,6 +14,7 @@ namespace LojaAPI.Data
         //Produtos        
         Task<Produto[]> GetProdutosAsyncByCategoriaId(int idCategoria);
         Task<Produto> GetProdutoAsyncById(int idProduto);
+        Task<Produto[]> GetAllProdutoAsync();
         
         //Categorias
         Task<Categoria[]> GetAllCategoriasAsync();

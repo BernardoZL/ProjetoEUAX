@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { LojaService } from '../loja.service';
 import { Categoria } from '../models/categoria.model';
 import { Produto } from '../models/produto.model';
+import { Observable, Subscriber } from 'rxjs';
 
 @Component({
   selector: 'app-produtos-admin',
@@ -10,49 +12,129 @@ import { Produto } from '../models/produto.model';
 })
 export class ProdutosAdminComponent implements OnInit {
 
-  @Input() categoria? : Categoria;
+  public myimage!: Observable<any>;
+
+  private _categoria!: Categoria;
+  @Input() set categoria(categoria : Categoria) {
+    this._categoria = categoria;
+    if(categoria){
+      this.carregarProdutos(categoria)
+    }
+  }
+  get categoria(): Categoria{
+    return this._categoria;
+  }
 
   public produtoSelecionado? : Produto;
   public estaCadastrando: boolean = false;
 
   public produtoForm! : FormGroup;
 
-  public produtos: Array<Produto> = [
-    {id: 1, nome: "Batata", preco:"500", imagem: ""},
-    {id: 2, nome: "Açucar", preco:"100", imagem: ""},
-    {id: 3, nome: "Pimenta", preco:"200", imagem: ""},
-    {id: 4, nome: "Chocolate", preco:"800", imagem: ""},
-    {id: 5, nome: "Arroz", preco:"50", imagem: ""},
-    {id: 6, nome: "Amendoim", preco:"600", imagem: ""},
-    {id: 7, nome: "Carne", preco:"300", imagem: ""}
-  ]
+  public produtos!: Produto[];
 
-  constructor(private fb: FormBuilder) { 
+
+  constructor
+  (
+    private fb: FormBuilder,
+    private lojaService: LojaService
+  ) 
+  { 
     this.inicializarForm()
   }
 
   ngOnInit(): void {
   }
 
+  public carregarProdutos(categ: Categoria){
+    this.lojaService.getProdutosByCategoria(categ.id).subscribe({
+      next: (retorno: Produto[]) => this.produtos = retorno,
+      error: (erro) => console.log(erro)
+    });
+  }
+
   inicializarForm(){
     this.produtoForm = this.fb.group({
       nome: ['', Validators.required],
-      preco: ['', Validators.required]
+      preco: ['', Validators.required],
+      imagem: [''],
+      idCategoria: [0]
     });
   }
 
   public selecionarProduto(produto?: Produto){
     this.produtoSelecionado = produto;
     if(produto){
-      this.produtoForm.patchValue(produto)
+      this.produtoForm.patchValue(produto);
+      //this.myimage = produto.imagem;
     }else{
       this.inicializarForm()
     }
   }
 
   public iniciarCadastro(){
-    this.produtoSelecionado = {id: 0, nome: "", preco: "", imagem: ""}
+    this.selecionarProduto({id: 0, nome: "", preco: "", imagem: "", idCategoria: this.categoria.id});
     this.estaCadastrando = true;
   }
+
+  public cadastrar(){
+    if(!this.produtoForm.valid){return};
+
+    this.lojaService.cadastrarProduto(this.produtoForm.value).subscribe({
+      next: (retorno) => {this.estaCadastrando = false;},
+      error: (erro) => console.log(erro)
+    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = new Observable<any>})
+
+  }
+
+  public atualizar(){
+    if(!this.produtoForm.valid){return};
+    
+    this.produtoForm.value.id = this.produtoSelecionado?.id;
+    this.lojaService.atualizarProduto(this.produtoForm.value).subscribe({
+      next: (retorno) => {console.log(retorno)},
+      error: (erro) => {console.log(erro)}
+    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = new Observable<any>})
+  }
+
+  public excluir(){
+    this.lojaService.deletarProduto(this.produtoSelecionado?.id).subscribe({
+      next: (retorno) => {
+
+      },
+      error: (erro) => {console.log(erro)}
+    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = new Observable<any>})
+  }
+
+  public onChange = ($event: Event) => {
+    const target = $event.target as HTMLInputElement;
+    const file: File = (target.files as FileList)[0];
+    this.convertToBase64(file);
+  };
+ 
+  public convertToBase64(file: File) {
+    const observable = new Observable((subscriber: Subscriber<any>) => {
+      this.readFile(file, subscriber);
+    });
+ 
+    observable.subscribe((imagem) => {
+      this.myimage = imagem;
+      this.produtoForm.patchValue({imagem: imagem})
+    })
+  }
+ 
+  public readFile(file: File, subscriber: Subscriber<any>) {
+    const filereader = new FileReader();
+    filereader.readAsDataURL(file);
+ 
+    filereader.onload = () => {
+      subscriber.next(filereader.result);
+      subscriber.complete();
+    };
+    filereader.onerror = (error) => {
+      subscriber.error(error);
+      subscriber.complete();
+    };
+  }
+  
 
 }

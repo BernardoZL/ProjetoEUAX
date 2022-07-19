@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LojaService } from '../loja/loja.service';
 import { Produto } from '../loja/models/produto.model';
 
 @Component({
@@ -8,21 +9,32 @@ import { Produto } from '../loja/models/produto.model';
 })
 export class CarrinhoComponent implements OnInit {
 
-  public produtos: Array<Produto> = []
+  public produtosNoCarrinho: Array<number> = [];
+  public produtos: Array<Produto> = [];
 
-  constructor() { }
+  constructor
+  (
+    private lojaService : LojaService
+  )
+  { 
 
-  ngOnInit(): void {
-    this.getProdutos()
   }
 
-  public getProdutos(){
+  ngOnInit(): void {
+    this.getProdutosNoCarrinho()
+  }
+
+  public getProdutosNoCarrinho(){
     let stringCarrinhoAtual = '' + sessionStorage.getItem("carrinho");
     let carrinhoAtual = [];
 
     if(JSON.parse(stringCarrinhoAtual)){
       carrinhoAtual = JSON.parse(stringCarrinhoAtual);
-      this.produtos = carrinhoAtual
+      this.produtosNoCarrinho = carrinhoAtual;
+      this.lojaService.getProdutos().subscribe({
+        next: (retorno: Produto[]) => this.produtos = retorno.filter(p => this.produtosNoCarrinho.includes(p.id)),
+        error: (erro) => console.log(erro)
+      })
     }
   }
 

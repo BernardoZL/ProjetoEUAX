@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { LojaService } from '../loja.service';
 import { Categoria } from '../models/categoria.model';
 import { Produto } from '../models/produto.model';
 
@@ -9,21 +10,30 @@ import { Produto } from '../models/produto.model';
 })
 export class ProdutosClienteComponent implements OnInit {
 
-  @Input() categoria? : Categoria
+  @Input() set categoria(categoria : Categoria) {
+    if(categoria){
+      this.carregarProdutos(categoria)
+    }
+  }
 
-  public produtos: Array<Produto> = [
-    {id: 1, nome: "Batata", preco:"500", imagem: ""},
-    {id: 2, nome: "Açucar", preco:"100", imagem: ""},
-    {id: 3, nome: "Pimenta", preco:"200", imagem: ""},
-    {id: 4, nome: "Chocolate", preco:"800", imagem: ""},
-    {id: 5, nome: "Arroz", preco:"50", imagem: ""},
-    {id: 6, nome: "Amendoim", preco:"600", imagem: ""},
-    {id: 7, nome: "Carne", preco:"300", imagem: ""}
-  ]
+  public produtos!: Produto[];
 
-  constructor() { }
+  constructor
+  (
+    private lojaService: LojaService
+  ) 
+  {
+
+  }
 
   ngOnInit(): void {
+  }
+
+  public carregarProdutos(categ: Categoria){
+    this.lojaService.getProdutosByCategoria(categ.id).subscribe({
+      next: (retorno: Produto[]) => this.produtos = retorno,
+      error: (erro) => console.log(erro)
+    });
   }
 
   public salvarNoCarrinho(idProduto: Number){
@@ -35,7 +45,10 @@ export class ProdutosClienteComponent implements OnInit {
       carrinhoAtual = JSON.parse(stringCarrinhoAtual);
     }
 
-    carrinhoAtual.push(idProduto);
+    if(!carrinhoAtual.includes(idProduto)){
+      carrinhoAtual.push(idProduto);
+    }
+    
     sessionStorage.setItem('carrinho', JSON.stringify(carrinhoAtual));
   }
 
