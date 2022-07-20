@@ -39,8 +39,11 @@ e na barra do diretório apagar tudo e digitar cmd
 No cmd que está na pasta Loja, digitar os seguintes comandos:
 
 npm install -g @angular/cli
+
 npm install --legacy-peer-deps
+
 ng serve
+
 n
 
 No cmd que está na pasta LojaAPI
