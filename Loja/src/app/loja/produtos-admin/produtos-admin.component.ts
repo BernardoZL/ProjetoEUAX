@@ -12,7 +12,7 @@ import { Observable, Subscriber } from 'rxjs';
 })
 export class ProdutosAdminComponent implements OnInit {
 
-  public myimage!: Observable<any>;
+  public myimage!: String;
 
   private _categoria!: Categoria;
   @Input() set categoria(categoria : Categoria) {
@@ -65,7 +65,7 @@ export class ProdutosAdminComponent implements OnInit {
     this.produtoSelecionado = produto;
     if(produto){
       this.produtoForm.patchValue(produto);
-      //this.myimage = produto.imagem;
+      this.myimage = produto.imagem;
     }else{
       this.inicializarForm()
     }
@@ -82,7 +82,7 @@ export class ProdutosAdminComponent implements OnInit {
     this.lojaService.cadastrarProduto(this.produtoForm.value).subscribe({
       next: (retorno) => {this.estaCadastrando = false;},
       error: (erro) => console.log(erro)
-    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = new Observable<any>})
+    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = ""})
 
   }
 
@@ -93,7 +93,7 @@ export class ProdutosAdminComponent implements OnInit {
     this.lojaService.atualizarProduto(this.produtoForm.value).subscribe({
       next: (retorno) => {console.log(retorno)},
       error: (erro) => {console.log(erro)}
-    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = new Observable<any>})
+    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = ""})
   }
 
   public excluir(){
@@ -102,7 +102,7 @@ export class ProdutosAdminComponent implements OnInit {
 
       },
       error: (erro) => {console.log(erro)}
-    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = new Observable<any>})
+    }).add(() => {this.selecionarProduto(undefined); this.carregarProdutos(this.categoria); this.myimage = ""})
   }
 
   public onChange = ($event: Event) => {

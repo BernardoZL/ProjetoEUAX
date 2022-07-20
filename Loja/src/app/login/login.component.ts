@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit {
   public logout(){
     sessionStorage.removeItem("login");
     this.isLogged = false;
+    this.router.navigate(['']);
   }
 
   inicializarForm(){
